@@ -6,7 +6,6 @@ declare module "next-auth" {
         username?: string;
         email?: string;
         password?: string;
-        createdAt?: Date;
     }
     interface Session {
         user: {
@@ -14,7 +13,6 @@ declare module "next-auth" {
             username?: string;
             email?: string;
             password?: string;
-            createdAt?: Date;
         } & DeafaultSession['user']
     }
 }
@@ -25,6 +23,5 @@ declare module "next-auth/jwt" {
         username?: string;
         email?: string;
         password?: string;
-        createdAt?: Date;
     }
 }

@@ -58,7 +58,6 @@ export const authOptions: NextAuthOptions = {
                 session.user.username = token.username?.toString();
                 session.user.email = token.email?.toString();
                 session.user.password = token.password?.toString();
-                session.user.createdAt = token.createdAt?.toLocaleDateString();
             }
 
             return session;
@@ -70,7 +69,6 @@ export const authOptions: NextAuthOptions = {
                 token.username = user.username?.toString();
                 token.email = user.email?.toString();
                 token.password = user.password?.toString();
-                token.createdAt = user.createdAt;
             }
 
             return token;

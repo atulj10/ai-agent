@@ -16,11 +16,7 @@ const UserSchema = new Schema<IUser>({
         type: String,
         required: true,
     },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-});
+}, { timestamps: true });
 
 const UserModel = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 
