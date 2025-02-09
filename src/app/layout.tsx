@@ -29,13 +29,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="flex h-screen">
               {/* Sidebar */}
               <aside
-                className={`fixed lg:static left-0 top-0 w-64 h-full bg-gray-900 text-white transform transition-transform duration-300
+                className={`fixed lg:static left-0 top-0 w-96 h-full bg-gray-900 text-white transform transition-transform duration-300
                 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
               >
                 <div className="h-full flex flex-col">
                   {/* Header */}
                   <div className="p-4 border-b border-gray-800 flex justify-between items-center">
-                    <h1 className="text-xl font-bold">AI-Agent</h1>
+                    <h1 className="text-2xl font-bold">AI-Agent</h1>
                     {/* Close button for mobile */}
                     <button onClick={() => setIsSidebarOpen(false)} className="lg:hidden text-white">
                       ✖
@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               `}
                             >
                               <item.icon className="w-5 h-5" />
-                              <span>{item.title}</span>
+                              <span className="text-xl">{item.title}</span>
                             </a>
                           </li>
                         );
