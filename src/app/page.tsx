@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ChatInput from "@/components/ChatInput";
 import ChatMessage from "@/components/ChatMessage";
+import { signOut } from "next-auth/react";
 
 export default function Home() {
   const [messages, setMessages] = useState<{ user: string; bot: string }[]>([]);
@@ -26,6 +27,7 @@ export default function Home() {
         ))}
       </div>
       <ChatInput onSend={handleSend} />
+      <button onClick={() => signOut()}>Sign Out</button>
     </div>
   );
 }

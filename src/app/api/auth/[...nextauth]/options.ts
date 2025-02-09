@@ -13,18 +13,17 @@ export const authOptions: NextAuthOptions = {
                 email: { label: "Email", type: "email", placeholder: "Enter your email" },
                 password: { label: "Password", type: "password" }
             },
-            async authorize({ credentials, req }: any): Promise<any> {
-                //This block of code is used for all types of authentication and checking to validate the user after all the checking it gives control back to the next auth
+            async authorize(credentials: any): Promise<any> {
                 await connectDB();
                 try {
-
-                    //This block of code is used to find the user in the database through username or email
+                    // Find user using username or email
                     const user = await UserModel.findOne({
                         $or: [
                             { username: credentials.identifier },
                             { email: credentials.identifier }
                         ]
-                    })
+                    });
+
                     if (!user) {
                         throw new Error("User not found");
                     }
@@ -37,10 +36,10 @@ export const authOptions: NextAuthOptions = {
                     return user;
                 } catch (error: any) {
                     console.log(error);
-                    throw new Error(error);
+                    throw new Error(error.message);
                 }
-
             }
+
         })
     ],
     pages: {
