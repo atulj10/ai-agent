@@ -25,17 +25,17 @@ export default function LoginPage() {
         if (res?.error) {
             alert(res.error);
         } else {
-            router.push("/");
+            router.push("/main/dashboard");
         }
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-[#0A0A0A] text-white">
+        <div className="flex items-center justify-center min-h-screen w-full bg-[#0A0A0A] text-white">
             <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3 }}
-                className="bg-[#121212] p-8 rounded-2xl shadow-xl lg:w-[45%] w-[70%] border border-gray-800"
+                className="bg-[#121212] p-8 rounded-2xl shadow-xl lg:w-[30%] w-[70%] border border-gray-800"
             >
                 <h2 className="text-2xl font-bold text-center mb-10">Sign in to AI-Agent</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">

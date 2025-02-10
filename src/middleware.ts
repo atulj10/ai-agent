@@ -12,7 +12,12 @@ export async function middleware(request: NextRequest) {
         url.pathname.startsWith('/login'))) {
         return NextResponse.redirect(new URL('/', request.url))
     }
+    if (!token && (
+        url.pathname.startsWith('/main'))) {
+        return NextResponse.redirect(new URL('/login', request.url))
+    }
 }
+
 
 
 // See "Matching Paths" below to learn more
@@ -23,7 +28,8 @@ export const config = {
         '/sign-up',
         '/dashboard/:path*',
         '/',
-        '/verify/:path*'
+        '/verify/:path*',
+        '/main/:path*'
     ],
 
 }
