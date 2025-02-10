@@ -23,10 +23,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head />
-      <body className={`bg-[#0A0A0A] ${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`bg-[#0A0A0A] w-full ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <SidebarProvider>
-            <div className="flex h-screen">
+            <div className="flex h-screen w-full">
               {/* Sidebar */}
               <aside
                 className={`fixed lg:static left-0 top-0 w-96 h-full bg-gray-900 text-white transform transition-transform duration-300
