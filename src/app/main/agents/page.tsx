@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { UserPlus, MoreVertical, X } from "lucide-react";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const agents = [
   { id: 1, name: "John Doe", role: "Senior Agent", avatar: "https://i.pravatar.cc/150?img=1" },
@@ -12,6 +14,7 @@ const agents = [
 export default function AgentsSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAgent, setNewAgent] = useState({ name: "", description: "", file: null, fileType: "pdf" });
+  const session = useSession();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -25,8 +28,15 @@ export default function AgentsSection() {
     setNewAgent((prev) => ({ ...prev, file: e.target.files[0] }));
   };
 
-  const handleCreateAgent = () => {
-    console.log("Agent Created:", newAgent);
+  const handleCreateAgent = async () => {
+    // console.log("Agent Created:", newAgent);
+    const response = await axios.post('/api/create-agent', {
+      name: newAgent.name,
+      description: newAgent.description
+    });
+
+    console.log("response", response);
+
     setIsModalOpen(false);
     setNewAgent({ name: "", description: "", file: null, fileType: "Image" });
   };
@@ -36,12 +46,12 @@ export default function AgentsSection() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">Agents</h2>
-        <button
+        {/* <button
           onClick={() => setIsModalOpen(true)}
           className="bg-[#5147f3] text-white px-4 py-2 rounded-lg hover:bg-[#4038d1] transition"
         >
           Add Agent
-        </button>
+        </button> */}
       </div>
 
       {/* Agents Grid */}
