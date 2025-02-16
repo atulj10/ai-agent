@@ -2,7 +2,7 @@ import connectDB from "@/lib/db";
 import AgentModel from "@/models/agent";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../auth/[...nextauth]/options";
+import { authOptions } from "../../auth/[...nextauth]/options";
 
 export async function POST(req: NextRequest) {
   try {
