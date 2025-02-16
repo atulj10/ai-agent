@@ -3,18 +3,12 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { UserPlus, MoreVertical, X } from "lucide-react";
 import axios from "axios";
-import { useSession } from "next-auth/react";
-
-const agents = [
-  { id: 1, name: "John Doe", role: "Senior Agent", avatar: "https://i.pravatar.cc/150?img=1" },
-  { id: 2, name: "Jane Smith", role: "Junior Agent", avatar: "https://i.pravatar.cc/150?img=2" },
-  { id: 3, name: "Michael Brown", role: "Lead Agent", avatar: "https://i.pravatar.cc/150?img=3" },
-];
+import { AgentTypes } from "@/app/types/agent";
 
 export default function AgentsSection() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [agents, setAgents] = useState<AgentTypes[]>();
   const [newAgent, setNewAgent] = useState({ name: "", description: "", file: null, fileType: "pdf" });
-  const session = useSession();
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -44,6 +38,7 @@ export default function AgentsSection() {
     const fetchAgents = async () => {
       const response = await axios.get('/api/agent');
       console.log(response);
+      setAgents(response?.data?.agents)
     }
 
     fetchAgents();
@@ -54,33 +49,22 @@ export default function AgentsSection() {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-white">Agents</h2>
-        {/* <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-[#5147f3] text-white px-4 py-2 rounded-lg hover:bg-[#4038d1] transition"
-        >
-          Add Agent
-        </button> */}
       </div>
 
       {/* Agents Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {agents.map((agent) => (
-          <Card key={agent.id} className="bg-[#18181B] border border-[#282A36] shadow-lg rounded-xl p-5 hover:scale-[1.03] transition-transform">
+        {agents?.map((agent) => (
+          <Card key={agent?._id} className="bg-[#18181B] border border-[#282A36] shadow-lg rounded-xl p-5 hover:scale-[1.03] transition-transform">
             <CardHeader className="flex flex-row items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src={agent.avatar} alt={agent.name} className="h-12 w-12 rounded-full border border-gray-600" />
+                <img src={"https://i.pravatar.cc/150?img=1"} alt={agent.name} className="h-12 w-12 rounded-full border border-gray-600" />
                 <div>
-                  <CardTitle className="text-lg font-medium text-white">{agent.name}</CardTitle>
-                  <p className="text-sm text-gray-400">{agent.role}</p>
+                  <CardTitle className="text-lg font-medium text-white">{agent?.name}</CardTitle>
+                  <p className="text-sm text-gray-400">{agent?.description}</p>
                 </div>
               </div>
               <MoreVertical className="text-gray-500 cursor-pointer" />
             </CardHeader>
-            {/* <CardContent>
-              <span className={`text-sm px-3 py-1 rounded-full ${agent.status === "Active" ? "bg-green-500/10 text-green-400" : "bg-red-500/10 text-red-400"}`}>
-                {agent.status}
-              </span>
-            </CardContent> */}
           </Card>
         ))}
 
