@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { UserPlus, MoreVertical, X } from "lucide-react";
 import axios from "axios";
@@ -30,16 +30,24 @@ export default function AgentsSection() {
 
   const handleCreateAgent = async () => {
     // console.log("Agent Created:", newAgent);
-    const response = await axios.post('/api/create-agent', {
+    const response = await axios.post('/api/agent/create', {
       name: newAgent.name,
       description: newAgent.description
     });
 
-    console.log("response", response);
 
     setIsModalOpen(false);
     setNewAgent({ name: "", description: "", file: null, fileType: "Image" });
   };
+
+  useEffect(() => {
+    const fetchAgents = async () => {
+      const response = await axios.get('/api/agent');
+      console.log(response);
+    }
+
+    fetchAgents();
+  })
 
   return (
     <div className="p-6">
