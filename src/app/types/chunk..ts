@@ -1,11 +1,11 @@
+import { Schema, Types } from "mongoose";
+
 export interface IChunk extends Document {
-    agentId: string;
-    text: string;
-    embedding: number[];
-    metadata: {
-        source: string;
-        page: number;
-    };
-    timestamp: Date;
-  }
-  
+  agentId: Types.ObjectId;
+  text: string;
+  embedding: number[];
+  metadata: {
+    fileName: string;
+  };
+  timestamp: Date;
+}
