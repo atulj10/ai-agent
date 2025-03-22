@@ -1,16 +1,15 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
 import connectDB from "@/lib/db";
 import AgentModel from "@/models/agent";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
 export async function GET(
-  req: NextRequest,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = (await params).id;
+    const { id } = await params;
 
     await connectDB();
     const session = await getServerSession(authOptions);

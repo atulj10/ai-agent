@@ -7,9 +7,10 @@ import ChatModel from "@/models/chat";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id?: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await connectDB();
     const session = await getServerSession(authOptions);
 
@@ -21,7 +22,7 @@ export async function GET(
     }
 
     const agent = await AgentModel.findOne({
-      _id: params.id,
+      _id: id,
       userId: session.user._id,
     });
 
@@ -32,7 +33,7 @@ export async function GET(
       );
     }
 
-    const chats = await ChatModel.find({ botId: params.id }).sort({
+    const chats = await ChatModel.find({ botId: id }).sort({
       timestamp: -1,
     });
 
