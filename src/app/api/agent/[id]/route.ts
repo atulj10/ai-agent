@@ -1,13 +1,17 @@
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import connectDB from "@/lib/db";
 import AgentModel from "@/models/agent";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
 export async function GET(
-  { params }: { params: { id?: string } } // Extracting params
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const id = (await params).id;
+
     await connectDB();
     const session = await getServerSession(authOptions);
 
@@ -18,10 +22,10 @@ export async function GET(
       );
     }
 
-    if (params?.id) {
+    if (id) {
       // Fetch a single agent by ID
       const agent = await AgentModel.findOne({
-        _id: params?.id,
+        _id: id,
         userId: session.user?._id,
       });
 
