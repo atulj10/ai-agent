@@ -24,7 +24,12 @@ import {
 export default function AgentsSection() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [agents, setAgents] = useState<AgentTypes[]>([]);
-  const [newAgent, setNewAgent] = useState({
+  const [newAgent, setNewAgent] = useState<{
+    name: string;
+    description: string;
+    file: File | null;
+    fileType: string;
+  }>({
     name: "",
     description: "",
     file: null,

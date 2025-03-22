@@ -4,11 +4,6 @@ import UserModel from "@/models/user";
 import connectDB from "@/lib/db";
 import bycrpt from "bcryptjs";
 
-interface Credentials {
-  identifier: string;
-  password: string;
-}
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -25,17 +20,24 @@ export const authOptions: NextAuthOptions = {
           placeholder: "Enter your email",
         },
         password: { label: "Password", type: "password" },
+        identifier: {
+          label: "Username or Email",
+          type: "text",
+          placeholder: "Enter your username or email",
+        },
       },
-      async authorize(
-        credentials: Credentials
-      ): Promise<{ _id: string; username: string; email: string } | null> {
+      async authorize(credentials) {
+        if (!credentials) {
+          throw new Error("Missing credentials");
+        }
+
         await connectDB();
         try {
           // Find user using username or email
           const user = await UserModel.findOne({
             $or: [
-              { username: credentials.identifier },
-              { email: credentials.identifier },
+              { username: credentials?.identifier },
+              { email: credentials?.identifier },
             ],
           });
 
@@ -44,7 +46,7 @@ export const authOptions: NextAuthOptions = {
           }
 
           const isPasswordValid = await bycrpt.compare(
-            credentials.password,
+            credentials?.password,
             user.password
           );
           if (!isPasswordValid) {

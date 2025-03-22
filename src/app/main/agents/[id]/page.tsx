@@ -28,7 +28,7 @@ const Chat = () => {
       const chatsResponse = await fetch(`/api/agent/chat/${id}`);
       const chatsData = await chatsResponse.json();
       // console.log(chatsData);
-      
+
       setChats(chatsData.chats);
     } catch (error) {
       console.error("Error fetching data:", error);

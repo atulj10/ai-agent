@@ -1,4 +1,4 @@
-export interface IChat extends Document {
+export interface IChat {
   _id?: string;
   botId: string;
   userMessage: string;
