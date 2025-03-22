@@ -3,6 +3,8 @@ import AgentModel from "@/models/agent";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/options";
+import ChunkModel from "@/models/chunk";
+import ChatModel from "@/models/chat";
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -28,7 +30,9 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
+    await ChunkModel.deleteMany({ agentId: agentId });
     await AgentModel.findByIdAndDelete(agentId);
+    await ChatModel.findByIdAndDelete(agentId);
 
     return NextResponse.json(
       {
