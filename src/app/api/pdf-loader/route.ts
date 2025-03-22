@@ -6,7 +6,7 @@ import os from "os";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import connectDB from "@/lib/db";
 
 // Configuration constants
@@ -35,14 +35,14 @@ async function processDocument(filePath: string) {
   });
 
   const splitDocs = await splitter.splitDocuments(docs);
-  return splitDocs.map(doc => doc.pageContent);
+  return splitDocs.map((doc) => doc.pageContent);
 }
 
 // Create embeddings
 async function createEmbeddings(texts: string[]) {
   const model = new GoogleGenerativeAIEmbeddings({
     model: "embedding-001",
-    apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY
+    apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY,
   });
   return await model.embedDocuments(texts);
 }
@@ -58,12 +58,10 @@ export async function POST(req: NextRequest) {
     // Get and validate file
     const formData = await req.formData();
     const file = formData.get("file") as File;
+    const agentId = formData.get("agentId") as string;
 
     if (!file) {
-      return NextResponse.json(
-        { error: "No file provided" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     // Process PDF
@@ -76,7 +74,7 @@ export async function POST(req: NextRequest) {
     const collection = client.db(DB_NAME).collection(COLLECTION_NAME);
 
     const documents = chunks.map((chunk, index) => ({
-      agentId: "1",
+      agentId: new ObjectId(agentId),
       text: chunk,
       embedding: embeddings[index],
       metadata: {
@@ -85,15 +83,33 @@ export async function POST(req: NextRequest) {
       timestamp: new Date(),
     }));
 
-
     await collection.insertMany(documents);
+
+    const index = {
+      name: `vector_index_${agentId}`,
+      definition: {
+        mappings: {
+          dynamic: true,
+          fields: {
+            embedding: {
+              type: "knnVector",
+              dimensions: 768,
+              similarity: "cosine",
+            },
+            agentId: {
+              type: "objectId",
+            },
+          },
+        },
+      },
+    };
+
+    await collection.createSearchIndex(index);
 
     return NextResponse.json({
       message: "PDF processed successfully",
       documentsProcessed: chunks.length,
     });
-
-
   } catch (error) {
     console.error("Error processing PDF:", error);
     return NextResponse.json(
