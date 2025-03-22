@@ -3,9 +3,10 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import ChunkModel from "@/models/chunk";
 import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import mongoose from "mongoose";
+import ChatModel from "@/models/chat";
 
 const DB_NAME = "ai-agent";
 const COLLECTION_NAME = "chunks";
@@ -13,7 +14,7 @@ const COLLECTION_NAME = "chunks";
 export async function POST(req: Request) {
   try {
     await connectDB();
-    const { query } = await req.json();
+    const { query, agentId } = await req.json();
 
     // Initialize embeddings model
     const embeddings = new GoogleGenerativeAIEmbeddings({
@@ -26,37 +27,30 @@ export async function POST(req: Request) {
     const collection = mongoClient.db(DB_NAME).collection(COLLECTION_NAME);
 
     // Create vector store
-    const vectorStore = new MongoDBAtlasVectorSearch(
-      embeddings,
-      {
-        collection: collection,
-        indexName: "vector_index",
-        textKey: "text",
-        embeddingKey: "embedding",
-      }
-    );
+    const vectorStore = new MongoDBAtlasVectorSearch(embeddings, {
+      collection: collection,
+      indexName: `vector_index_${agentId}`,
+      textKey: "text",
+      embeddingKey: "embedding",
+    });
 
     // Perform similarity search with filter in searchArgs
-    const searchResults = await vectorStore.similaritySearch(
-      query,
-      10,
-      {
-        preFilter: {
-          agentId: "1"
-        }
-      }
-    );
+    const searchResults = await vectorStore.similaritySearch(query, 10, {
+      preFilter: {
+        agentId: new ObjectId(agentId),
+      },
+    });
 
     // Format results to match your schema
-    const formattedResults = searchResults.map(result => (
-      result.pageContent
-    ));
+    const formattedResults = searchResults.map((result) => result.pageContent);
 
     const prompt = `Your are a helpful assistant for giving resume answers to the question asked to you .\nYou are asked the following question: ${query}
     \nYou are given the following context: ${formattedResults.join("\n")}
-    \nAnswer the question based on the context. And rememeber to give the answer in a way that is easy to understand. And only give the answer nothings else.`
+    \nAnswer the question based on the context. And rememeber to give the answer in a way that is easy to understand. And only give the answer nothings else.`;
 
-    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
+    const genAI = new GoogleGenerativeAI(
+      process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""
+    );
 
     const model = genAI.getGenerativeModel({
       model: "gemini-2.0-flash-exp",
@@ -70,22 +64,29 @@ export async function POST(req: Request) {
       responseMimeType: "text/plain",
     };
 
-
     const chatSession = model.startChat({
       generationConfig,
-      history: [
-      ],
+      history: [],
     });
 
     const result = await chatSession.sendMessage(prompt);
 
+    const chat = {
+      botId: agentId,
+      userMessage: query,
+      botResponse: result?.response?.candidates?.[0]?.content?.parts?.[0]?.text,
+    };
+
+    const newChat = new ChatModel(chat);
+    await newChat.save();
+
     return NextResponse.json({
       query: query,
-      answer: result?.response?.candidates?.[0]?.content?.parts?.[0]?.text
+      searchResults: searchResults,
+      answer: result?.response?.candidates?.[0]?.content?.parts?.[0]?.text,
     });
-
   } catch (error) {
-    console.error('Vector search error:', error);
+    console.error("Vector search error:", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 }
