@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Geist, Geist_Mono } from "next/font/google";
+// import { Geist, Geist_Mono } from "next/font/google";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { LayoutDashboard, Bot, LogOut, Menu } from "lucide-react";
 import { signOut } from "next-auth/react";
 import AuthProvider from "@/context/AuthProvider";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
+// const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
 const navItems = [
   { title: "Dashboard", href: "/main/dashboard", icon: LayoutDashboard },

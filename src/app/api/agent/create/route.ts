@@ -34,9 +34,12 @@ export async function POST(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to create agent";
+
     return NextResponse.json(
-      { error: "Failed to create agent", details: error },
+      { error: errorMessage, details: error },
       { status: 500 }
     );
   }

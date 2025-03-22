@@ -44,8 +44,8 @@ export default function AgentsSection() {
     setNewAgent((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       setFileName(file.name);
       setNewAgent((prev) => ({ ...prev, file }));

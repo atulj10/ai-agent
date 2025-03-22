@@ -40,9 +40,11 @@ export async function DELETE(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to delete agent";
     return NextResponse.json(
-      { error: "Failed to delete agent", details: error.message },
+      { error: errorMessage, details: error },
       { status: 500 }
     );
   }

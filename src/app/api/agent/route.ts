@@ -1,10 +1,10 @@
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { authOptions } from "../auth/[...nextauth]/options";
 import connectDB from "@/lib/db";
 import AgentModel from "@/models/agent";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     await connectDB();
     const session = await getServerSession(authOptions);
@@ -19,10 +19,13 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal Server Error";
     return NextResponse.json(
       {
         success: false,
+        message: errorMessage,
         error: error,
       },
       { status: 500 }

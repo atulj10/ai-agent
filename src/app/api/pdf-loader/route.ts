@@ -5,7 +5,6 @@ import path from "path";
 import os from "os";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
 import { MongoClient, ObjectId } from "mongodb";
 import connectDB from "@/lib/db";
 

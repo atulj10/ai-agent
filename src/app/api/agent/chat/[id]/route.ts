@@ -40,9 +40,12 @@ export async function GET(
       { success: true, message: "Agent fetched successfully!", chats: chats },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errMessage =
+      error instanceof Error ? error.message : "Internal Server Error";
+
     return NextResponse.json(
-      { success: false, error: error.message || "Internal Server Error" },
+      { success: false, error: errMessage },
       { status: 500 }
     );
   }

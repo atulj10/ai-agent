@@ -95,8 +95,8 @@ const Chat = () => {
 
       {/* Agent Details Section */}
       <div className="max-w-4xl mx-auto mb-8">
-        <h1 className="text-3xl font-bold text-[#5147f3]">{details.name}</h1>
-        <p className="text-gray-400 mt-2">{details.description}</p>
+        <h1 className="text-3xl font-bold text-[#5147f3]">{details?.name}</h1>
+        <p className="text-gray-400 mt-2">{details?.description}</p>
       </div>
 
       {/* Chat Section */}

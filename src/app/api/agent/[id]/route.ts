@@ -1,11 +1,10 @@
 import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
 import AgentModel from "@/models/agent";
 import { authOptions } from "../../auth/[...nextauth]/options";
 
 export async function GET(
-  req: NextRequest,
   { params }: { params: { id?: string } } // Extracting params
 ) {
   try {
@@ -22,8 +21,8 @@ export async function GET(
     if (params?.id) {
       // Fetch a single agent by ID
       const agent = await AgentModel.findOne({
-        _id: params.id,
-        userId: session.user._id,
+        _id: params?.id,
+        userId: session.user?._id,
       });
 
       if (!agent) {
@@ -46,9 +45,11 @@ export async function GET(
         { status: 200 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { success: false, error: error.message || "Internal Server Error" },
+      { success: false, error: errorMessage, detail: error },
       { status: 500 }
     );
   }

@@ -1,9 +1,8 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import ChunkModel from "@/models/chunk";
 import { MongoDBAtlasVectorSearch } from "@langchain/mongodb";
-import { MongoClient, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 import mongoose from "mongoose";
 import ChatModel from "@/models/chat";
