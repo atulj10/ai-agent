@@ -1,16 +1,5 @@
 "use client";
 import React from "react";
-import {
-  ArrowRight,
-  FileText,
-  Database,
-  Globe,
-  Bot,
-  CheckCircle,
-  Github,
-  Twitter,
-  Linkedin,
-} from "lucide-react";
 import FAQSection from "@/components/landing-page/faq/FAQSection";
 import FeatureSection from "@/components/landing-page/feature-section/FeatureSection";
 import HeroSection from "@/components/landing-page/hero-section/HeroSection";
