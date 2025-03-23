@@ -2,7 +2,7 @@
 import { AgentTypes } from "@/app/types/agent"; // Import IChat interface
 import { IChat } from "@/app/types/chat";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ArrowLeft, Send } from "lucide-react"; // Import back arrow and send icons
 import axios from "axios";
 
@@ -14,6 +14,7 @@ const Chat = () => {
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [message, setMessage] = useState<string>(""); // State for the input message
   const [isSending, setIsSending] = useState<boolean>(false); // State for sending message
+  const chatContainerRef = useRef<HTMLDivElement>(null); // Ref for the chat container
 
   const fetchAgentAndChats = async () => {
     try {
@@ -27,8 +28,6 @@ const Chat = () => {
       // Fetch chats for the agent
       const chatsResponse = await fetch(`/api/agent/chat/${id}`);
       const chatsData = await chatsResponse.json();
-      // console.log(chatsData);
-
       setChats(chatsData.chats);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -57,7 +56,7 @@ const Chat = () => {
           botId: id as string,
           userMessage: message,
           botResponse: data.answer,
-          timestamp: new Date(),
+          createdAt: new Date(),
         };
 
         setChats((prevChats) => [...prevChats, newChat]);
@@ -70,6 +69,17 @@ const Chat = () => {
     }
   };
 
+  // Scroll to the bottom of the chat container whenever chats are updated
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [chats]);
+
+  // Fetch agent and chats on component mount
   useEffect(() => {
     fetchAgentAndChats();
   }, [id]);
@@ -83,51 +93,58 @@ const Chat = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#1E1E2F] text-white p-6">
+    <div className="min-h-screen bg-[#1E1E2F] text-white p-4 sm:p-6">
       {/* Back Button */}
       <button
-        onClick={() => router.back()} // Navigate back
-        className="flex items-center text-[#5147f3] hover:text-[#4038d1] transition-colors mb-6"
+        onClick={() => router.back()}
+        className="flex items-center text-[#5147f3] hover:text-[#4038d1] transition-colors mb-4 sm:mb-6"
       >
         <ArrowLeft className="h-5 w-5 mr-2" />
         Back
       </button>
 
       {/* Agent Details Section */}
-      <div className="max-w-4xl mx-auto mb-8">
-        <h1 className="text-3xl font-bold text-[#5147f3]">{details?.name}</h1>
-        <p className="text-gray-400 mt-2">{details?.description}</p>
+      <div className="max-w-4xl mx-auto mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#5147f3]">
+          {details?.name}
+        </h1>
+        <p className="text-gray-400 mt-1 sm:mt-2 text-sm sm:text-base">
+          {details?.description}
+        </p>
       </div>
 
       {/* Chat Section */}
-      <div className="max-w-4xl mx-auto bg-[#282A36] rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-[#5147f3] mb-6">Chat History</h2>
+      <div className="max-w-4xl mx-auto bg-[#282A36] rounded-lg shadow-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#5147f3] mb-4 sm:mb-6">
+          Chat History
+        </h2>
 
         {/* Chat List */}
-        <div className="space-y-4 mb-6">
+        <div
+          ref={chatContainerRef}
+          className="space-y-4 mb-4 sm:mb-6 h-[60vh] overflow-y-auto "
+          style={{ scrollbarWidth: "none" }}
+        >
           {chats.length > 0 ? (
             chats.map((chat) => (
-              <div
-                key={chat._id}
-                className="bg-[#1E1E2F] rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start space-x-4">
-                  {/* User Message */}
-                  <div className="flex-1">
-                    <div className="text-sm text-gray-400">You</div>
-                    <div className="text-white mt-1">{chat.userMessage}</div>
+              <div key={chat._id} className="flex flex-col space-y-2">
+                {/* User Message */}
+                <div className="flex justify-end">
+                  <div className="bg-[#5147f3] text-white rounded-lg p-2 sm:p-3 max-w-[80%] sm:max-w-[70%]">
+                    {chat.userMessage}
                   </div>
+                </div>
 
-                  {/* Bot Response */}
-                  <div className="flex-1">
-                    <div className="text-sm text-gray-400">Bot</div>
-                    <div className="text-white mt-1">{chat.botResponse}</div>
+                {/* Bot Response */}
+                <div className="flex justify-start">
+                  <div className="bg-[#1E1E2F] text-white rounded-lg p-2 sm:p-3 max-w-[80%] sm:max-w-[70%] overflow-x-auto">
+                    {chat.botResponse}
                   </div>
                 </div>
 
                 {/* Timestamp */}
-                <div className="text-xs text-gray-500 mt-2">
-                  {new Date(chat.timestamp).toLocaleString()}
+                <div className="text-xs text-gray-500 text-center mt-1 sm:mt-2">
+                  {new Date(chat?.createdAt as Date).toLocaleString()}
                 </div>
               </div>
             ))
@@ -137,13 +154,13 @@ const Chat = () => {
         </div>
 
         {/* Input Section */}
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 sm:space-x-4 mt-4 sm:mt-6">
           <input
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your message..."
-            className="flex-1 p-3 rounded-lg bg-[#1E1E2F] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3] focus:ring-1 focus:ring-[#5147f3] transition-colors"
+            className="flex-1 p-2 sm:p-3 rounded-lg bg-[#1E1E2F] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3] focus:ring-1 focus:ring-[#5147f3] transition-colors text-sm sm:text-base"
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isSending) {
                 sendMessage();
@@ -153,12 +170,12 @@ const Chat = () => {
           <button
             onClick={sendMessage}
             disabled={isSending || !message.trim()}
-            className="p-3 bg-[#5147f3] text-white rounded-lg hover:bg-[#4038d1] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-2 sm:p-3 bg-[#5147f3] text-white rounded-lg hover:bg-[#4038d1] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSending ? (
-              <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-t-2 border-b-2 border-white"></div>
             ) : (
-              <Send className="h-5 w-5" />
+              <Send className="h-4 w-4 sm:h-5 sm:w-5" />
             )}
           </button>
         </div>

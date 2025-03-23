@@ -3,7 +3,8 @@ export interface IChat {
   botId: string;
   userMessage: string;
   botResponse: string;
-  timestamp: Date;
+  createdAt?: Date;
+  timestamp?: Date;
 }
 
 export interface ChatInputProps {

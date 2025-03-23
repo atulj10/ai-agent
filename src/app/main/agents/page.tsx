@@ -135,43 +135,47 @@ export default function AgentsSection() {
   };
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-white">Agents</h2>
+    <div className="p-6 md:p-8 bg-gradient-to-b from-[#15151a] to-[#121218]">
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-2xl md:text-3xl font-bold text-white bg-clip-text bg-gradient-to-r from-[#5147f3] to-[#7f73ff] text-transparent">
+          Agents
+        </h2>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-7">
         {agents?.map((agent) => (
           <Card
             key={agent?._id}
-            className="bg-[#18181B] border border-[#282A36] flex items-center shadow-lg rounded-xl hover:shadow-xl p-5 hover:scale-[1.03] transition-all duration-300 cursor-pointer h-full"
+            className="bg-[#18181B]/80 backdrop-blur-sm border border-[#303040] flex items-center shadow-xl rounded-2xl hover:shadow-[0_0_20px_rgba(81,71,243,0.15)] p-6 hover:scale-[1.03] transition-all duration-300 cursor-pointer h-full relative overflow-hidden"
           >
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-2xl"></div>
             <CardHeader className="flex flex-row items-center w-full justify-between p-0 space-y-0">
               <Link
                 href={`/main/agents/${agent?._id}`}
-                className="flex items-center gap-3 w-full"
+                className="flex items-center gap-4 w-full"
               >
-                <div className="h-12 w-12 rounded-full bg-gradient-to-br from-[#5147f3] to-[#7f73ff] flex items-center justify-center text-white font-bold text-lg">
+                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-[#5147f3] to-[#7f73ff] flex items-center justify-center text-white font-bold text-lg shadow-md shadow-[#5147f3]/20">
                   {agent?.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <CardTitle className="text-lg font-medium text-white">
+                  <CardTitle className="text-lg font-semibold text-white">
                     {agent?.name}
                   </CardTitle>
-                  <p className="text-sm text-gray-400 line-clamp-1">
+                  <p className="text-sm text-gray-400 line-clamp-1 mt-1">
                     {agent?.description || "No description"}
                   </p>
                 </div>
               </Link>
 
-              {/* Dropdown Menu */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <MoreVertical className="text-gray-500 cursor-pointer hover:text-gray-300 transition-colors" />
+                  <div className="p-2 rounded-full hover:bg-[#282A36]/60 transition-colors">
+                    <MoreVertical className="text-gray-400 cursor-pointer hover:text-white transition-colors w-5 h-5" />
+                  </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-[#282A36] border border-gray-600">
+                <DropdownMenuContent className="bg-[#282A36] border border-gray-600 rounded-xl p-1 shadow-xl">
                   <DropdownMenuItem
-                    className="text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer"
+                    className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer rounded-lg px-3 py-2 font-medium"
                     onClick={() => deleteAgent(agent?._id as string)}
                   >
                     <Trash className="h-4 w-4 mr-2" />
@@ -185,13 +189,16 @@ export default function AgentsSection() {
 
         <Card
           onClick={() => setIsModalOpen(true)}
-          className="bg-[#282A36] border border-dashed border-gray-500 shadow-lg rounded-xl p-5 flex items-center justify-center cursor-pointer hover:bg-[#2e303e] hover:scale-[1.05] transition-all duration-300 h-full"
+          className="bg-[#282A36]/50 border border-dashed border-[#5147f3]/40 shadow-lg rounded-2xl p-6 flex items-center justify-center cursor-pointer hover:bg-[#2e303e]/60 hover:scale-[1.05] transition-all duration-300 h-full relative overflow-hidden group"
         >
+          <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-2xl group-hover:bg-[#5147f3]/20 transition-all duration-300"></div>
           <div className="flex flex-col items-center text-gray-400">
-            <div className="h-12 w-12 rounded-full bg-[#5147f3]/20 flex items-center justify-center">
-              <UserPlus className="h-6 w-6 text-[#5147f3]" />
+            <div className="h-14 w-14 rounded-full bg-[#5147f3]/20 flex items-center justify-center group-hover:bg-[#5147f3]/30 transition-all duration-300 shadow-inner">
+              <UserPlus className="h-7 w-7 text-[#6c63ff] group-hover:scale-110 transition-all duration-300" />
             </div>
-            <p className="mt-3 text-lg font-medium">Add Agent</p>
+            <p className="mt-4 text-lg font-medium text-gray-300 group-hover:text-white transition-colors">
+              Add Agent
+            </p>
           </div>
         </Card>
       </div>
@@ -199,25 +206,25 @@ export default function AgentsSection() {
       {/* Modal Overlay */}
       {isModalOpen && (
         <div
-          className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
           onClick={resetModal}
         >
           <div
-            className="bg-[#18181B] p-8 rounded-xl shadow-2xl w-full max-w-md relative border border-[#282A36]"
-            onClick={(e) => e.stopPropagation()} // Prevent clicks from closing the modal
+            className="bg-[#18181B] p-8 rounded-2xl shadow-2xl w-full max-w-md relative border border-[#303040] animate-scaleIn"
+            onClick={(e) => e.stopPropagation()}
           >
             <button
-              className="absolute top-1 right-1 text-gray-400 hover:text-white p-1 rounded-full hover:bg-[#282A36] transition-colors"
+              className="absolute top-2 right-2 text-gray-400 hover:text-white p-2 rounded-full hover:bg-[#282A36] transition-colors"
               onClick={resetModal}
             >
               <X className="h-5 w-5" />
             </button>
 
             <Tabs value={activeTab} className="w-full">
-              <TabsList className="flex w-full bg-[#131314] rounded-t-lg overflow-hidden mb-6 p-1 border-b border-gray-700">
+              <TabsList className="flex w-full bg-[#131314] rounded-xl overflow-hidden mb-8 p-1 border-b border-gray-700">
                 <TabsTrigger
                   value="details"
-                  className={`flex-1 text-white py-3 rounded-md transition-all duration-200 flex items-center justify-center gap-2 ${
+                  className={`flex-1 text-white py-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
                     activeTab === "details"
                       ? "bg-gradient-to-r from-[#5147f3] to-[#6c63ff] font-medium shadow-lg"
                       : "hover:bg-[#282A36] hover:text-gray-200"
@@ -245,7 +252,7 @@ export default function AgentsSection() {
 
                 <TabsTrigger
                   value="upload"
-                  className={`flex-1 text-white py-3 rounded-md transition-all duration-200 flex items-center justify-center gap-2 ${
+                  className={`flex-1 text-white py-3 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${
                     !createdAgent
                       ? "opacity-50 cursor-not-allowed"
                       : activeTab === "upload"
@@ -275,8 +282,10 @@ export default function AgentsSection() {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="details" className="space-y-4">
-                <h3 className="text-xl font-bold text-white">Create Agent</h3>
+              <TabsContent value="details" className="space-y-5">
+                <h3 className="text-xl font-bold text-white bg-clip-text bg-gradient-to-r from-[#5147f3] to-[#7f73ff] text-transparent">
+                  Create Agent
+                </h3>
 
                 <div className="space-y-2">
                   <label className="block text-gray-300 text-sm font-medium">
@@ -288,7 +297,7 @@ export default function AgentsSection() {
                     value={newAgent.name}
                     onChange={handleInputChange}
                     placeholder="Enter agent name"
-                    className="w-full p-3 rounded-lg bg-[#282A36] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3] focus:ring-1 focus:ring-[#5147f3] transition-colors"
+                    className="w-full p-3 rounded-xl bg-[#282A36] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3] focus:ring-1 focus:ring-[#5147f3] transition-colors"
                   />
                 </div>
 
@@ -302,14 +311,14 @@ export default function AgentsSection() {
                     onChange={handleInputChange}
                     placeholder="Enter agent description"
                     rows={3}
-                    className="w-full p-3 rounded-lg bg-[#282A36] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3] focus:ring-1 focus:ring-[#5147f3] transition-colors resize-none"
+                    className="w-full p-3 rounded-xl bg-[#282A36] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3] focus:ring-1 focus:ring-[#5147f3] transition-colors resize-none"
                   />
                 </div>
 
                 <button
                   onClick={handleCreateAgent}
                   disabled={!newAgent.name}
-                  className={`w-full mt-4 bg-[#5147f3] text-white px-4 py-3 rounded-lg hover:bg-[#4038d1] transition-colors font-medium ${
+                  className={`w-full mt-6 bg-gradient-to-r from-[#5147f3] to-[#6c63ff] text-white px-4 py-3 rounded-xl hover:shadow-lg hover:shadow-[#5147f3]/20 transition-all font-medium ${
                     !newAgent.name ? "opacity-50 cursor-not-allowed" : ""
                   }`}
                 >
@@ -317,8 +326,8 @@ export default function AgentsSection() {
                 </button>
               </TabsContent>
 
-              <TabsContent value="upload" className="space-y-4">
-                <h3 className="text-xl font-bold text-white">
+              <TabsContent value="upload" className="space-y-5">
+                <h3 className="text-xl font-bold text-white bg-clip-text bg-gradient-to-r from-[#5147f3] to-[#7f73ff] text-transparent">
                   Upload Knowledge
                 </h3>
 
@@ -327,7 +336,7 @@ export default function AgentsSection() {
                     name="fileType"
                     value={newAgent.fileType}
                     onChange={handleInputChange}
-                    className="p-2 rounded-lg bg-[#282A36] text-white border border-gray-600 focus:outline-none focus:border-[#5147f3]"
+                    className="p-3 rounded-xl bg-[#282A36] text-white border border-gray-600 focus:outline-none focus:ring-1 focus:border-[#5147f3] focus:ring-[#5147f3]"
                   >
                     <option value="pdf">PDF Document</option>
                     <option value="excel">Excel Sheet</option>
@@ -335,7 +344,7 @@ export default function AgentsSection() {
                   </select>
                 </div>
 
-                <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-[#5147f3] transition-colors">
+                <div className="border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-[#5147f3] transition-colors bg-[#282A36]/30 group">
                   <input
                     type="file"
                     onChange={handleFileChange}
@@ -351,11 +360,13 @@ export default function AgentsSection() {
                       htmlFor="fileUpload"
                       className="cursor-pointer flex flex-col items-center justify-center"
                     >
-                      <Upload className="h-10 w-10 text-[#5147f3] mb-2" />
+                      <div className="h-16 w-16 rounded-full bg-[#5147f3]/10 flex items-center justify-center mb-4 group-hover:bg-[#5147f3]/20 transition-all">
+                        <Upload className="h-8 w-8 text-[#6c63ff] group-hover:scale-110 transition-all" />
+                      </div>
                       <p className="text-gray-300 font-medium">
                         Click to upload or drag and drop
                       </p>
-                      <p className="text-gray-500 text-sm">
+                      <p className="text-gray-500 text-sm mt-1">
                         {newAgent.fileType === "pdf"
                           ? "PDF"
                           : newAgent.fileType === "excel"
@@ -367,12 +378,14 @@ export default function AgentsSection() {
                   ) : (
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <FileText className="h-8 w-8 text-[#5147f3] mr-3" />
+                        <div className="h-12 w-12 rounded-full bg-[#5147f3]/20 flex items-center justify-center mr-4">
+                          <FileText className="h-6 w-6 text-[#6c63ff]" />
+                        </div>
                         <div className="text-left">
                           <p className="text-gray-300 font-medium truncate max-w-xs">
                             {fileName}
                           </p>
-                          <p className="text-gray-500 text-sm">
+                          <p className="text-gray-500 text-sm mt-1">
                             Ready to upload
                           </p>
                         </div>
@@ -382,7 +395,7 @@ export default function AgentsSection() {
                           setFileName("");
                           setNewAgent((prev) => ({ ...prev, file: null }));
                         }}
-                        className="text-gray-400 hover:text-white"
+                        className="text-gray-400 hover:text-white p-2 rounded-full hover:bg-[#282A36]"
                       >
                         <X className="h-5 w-5" />
                       </button>
@@ -393,7 +406,7 @@ export default function AgentsSection() {
                 <button
                   onClick={uploadPDF}
                   disabled={!newAgent.file || isUploading}
-                  className={`w-full mt-4 bg-[#5147f3] text-white px-4 py-3 rounded-lg hover:bg-[#4038d1] transition-colors font-medium flex items-center justify-center ${
+                  className={`w-full mt-6 bg-gradient-to-r from-[#5147f3] to-[#6c63ff] text-white px-4 py-3 rounded-xl hover:shadow-lg hover:shadow-[#5147f3]/20 transition-all font-medium flex items-center justify-center ${
                     !newAgent.file || isUploading
                       ? "opacity-50 cursor-not-allowed"
                       : ""
