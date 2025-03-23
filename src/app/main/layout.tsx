@@ -27,7 +27,7 @@ export default function SidebarLayout({ children }: { children: React.ReactNode 
         <div className="flex h-screen w-full">
           {/* Sidebar */}
           <aside
-            className={`fixed lg:static left-0 top-0 w-96 h-full bg-gray-900 text-white transform transition-transform duration-300
+            className={`fixed lg:static z-50 left-0 top-0 w-96 h-full bg-gray-900 text-white transform transition-transform duration-300
             ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
           >
             <div className="h-full flex flex-col">
