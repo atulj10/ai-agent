@@ -3,13 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  UserPlus,
-  X,
-  Upload,
-  FileText,
-  Loader2,
-} from "lucide-react";
+import { UserPlus, X, Upload, FileText, Loader2 } from "lucide-react";
 import axios from "axios";
 import { AgentTypes } from "@/app/types/agent";
 import AgentCard from "../../../components/agent-card/AgentCard";
@@ -159,14 +153,18 @@ export default function AgentsSection() {
 
           <Card
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#282A36]/50 border border-dashed border-[#5147f3]/40 shadow-lg rounded-2xl p-4 sm:p-5 md:p-6 flex items-center justify-center cursor-pointer hover:bg-[#2e303e]/60 hover:scale-[1.02] sm:hover:scale-[1.03] md:hover:scale-[1.05] transition-all duration-300 h-full relative overflow-hidden group"
+            className="group bg-[#282A36]/50 border border-dashed border-[#5147f3]/40 shadow-lg rounded-2xl p-6 flex items-center justify-center cursor-pointer hover:bg-[#2e303e]/60 transition-all duration-300 h-full relative overflow-hidden hover:border-[#5147f3]/60"
           >
-            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-2xl group-hover:bg-[#5147f3]/20 transition-all duration-300"></div>
-            <div className="flex flex-col items-center text-gray-400">
-              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#5147f3]/20 flex items-center justify-center group-hover:bg-[#5147f3]/30 transition-all duration-300 shadow-inner">
-                <UserPlus className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-[#6c63ff] group-hover:scale-110 transition-all duration-300" />
+            {/* Gradient glow effects */}
+            <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-xl group-hover:bg-[#5147f3]/20 transition-all duration-500"></div>
+            <div className="absolute -left-6 -bottom-6 h-16 w-16 rounded-full bg-[#7f73ff]/10 blur-lg group-hover:bg-[#7f73ff]/15 transition-all duration-700"></div>
+
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="relative h-14 w-14 rounded-full bg-[#5147f3]/20 flex items-center justify-center group-hover:bg-[#5147f3]/30 transition-all duration-300 shadow-inner border border-[#5147f3]/20">
+                <UserPlus className="h-6 w-6 text-[#6c63ff] group-hover:scale-110 transition-transform duration-300" />
+                <span className="absolute inset-0 rounded-full border border-white/5"></span>
               </div>
-              <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg font-medium text-gray-300 group-hover:text-white transition-colors">
+              <p className="text-lg font-medium text-gray-300 group-hover:text-white transition-colors">
                 Add Agent
               </p>
             </div>
