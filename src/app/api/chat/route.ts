@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
     const prompt = `Your are a helpful assistant for giving resume answers to the question asked to you .\nYou are asked the following question: ${query}
     \nYou are given the following context: ${formattedResults.join("\n")}
-    \nAnswer the question based on the context. And rememeber to give the answer in a way that is easy to understand. And only give the answer nothings else.`;
+    \nAnswer the question based on the context. And remember to give the answer in a way that is easy to understand. And only give the answer nothings else.`;
 
     const genAI = new GoogleGenerativeAI(
       process.env.NEXT_PUBLIC_GEMINI_API_KEY || ""

@@ -9,7 +9,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import connectDB from "@/lib/db";
 
 // Configuration constants
-const CHUNK_SIZE = 100;
+const CHUNK_SIZE = 500;
 const CHUNK_OVERLAP = 20;
 const DB_NAME = "ai-agent";
 const COLLECTION_NAME = "chunks";
