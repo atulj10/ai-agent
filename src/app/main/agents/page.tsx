@@ -1,26 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   UserPlus,
-  MoreVertical,
   X,
   Upload,
   FileText,
-  Trash,
   Loader2,
 } from "lucide-react";
 import axios from "axios";
 import { AgentTypes } from "@/app/types/agent";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import AgentCard from "../../../components/agent-card/AgentCard";
 
 export default function AgentsSection() {
   const [loading, setLoading] = useState(false);
@@ -156,61 +148,25 @@ export default function AgentsSection() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-7">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-7">
           {agents?.map((agent) => (
-            <Card
-              key={agent?._id}
-              className="bg-[#18181B]/80 backdrop-blur-sm border border-[#303040] flex items-center shadow-xl rounded-2xl hover:shadow-[0_0_20px_rgba(81,71,243,0.15)] p-6 hover:scale-[1.03] transition-all duration-300 cursor-pointer h-full relative overflow-hidden"
-            >
-              <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-2xl"></div>
-              <CardHeader className="flex flex-row items-center w-full justify-between p-0 space-y-0">
-                <Link
-                  href={`/main/agents/${agent?._id}`}
-                  className="flex items-center gap-4 w-full"
-                >
-                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-[#5147f3] to-[#7f73ff] flex items-center justify-center text-white font-bold text-lg shadow-md shadow-[#5147f3]/20">
-                    {agent?.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg font-semibold text-white">
-                      {agent?.name}
-                    </CardTitle>
-                    <p className="text-sm text-gray-400 line-clamp-1 mt-1">
-                      {agent?.description || "No description"}
-                    </p>
-                  </div>
-                </Link>
-
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <div className="p-2 rounded-full hover:bg-[#282A36]/60 transition-colors">
-                      <MoreVertical className="text-gray-400 cursor-pointer hover:text-white transition-colors w-5 h-5" />
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="bg-[#282A36] border border-gray-600 rounded-xl p-1 shadow-xl">
-                    <DropdownMenuItem
-                      className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer rounded-lg px-3 py-2 font-medium"
-                      onClick={() => deleteAgent(agent?._id as string)}
-                    >
-                      <Trash className="h-4 w-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </CardHeader>
-            </Card>
+            <AgentCard
+              key={agent._id}
+              agent={agent}
+              deleteAgent={deleteAgent}
+            />
           ))}
 
           <Card
             onClick={() => setIsModalOpen(true)}
-            className="bg-[#282A36]/50 border border-dashed border-[#5147f3]/40 shadow-lg rounded-2xl p-6 flex items-center justify-center cursor-pointer hover:bg-[#2e303e]/60 hover:scale-[1.05] transition-all duration-300 h-full relative overflow-hidden group"
+            className="bg-[#282A36]/50 border border-dashed border-[#5147f3]/40 shadow-lg rounded-2xl p-4 sm:p-5 md:p-6 flex items-center justify-center cursor-pointer hover:bg-[#2e303e]/60 hover:scale-[1.02] sm:hover:scale-[1.03] md:hover:scale-[1.05] transition-all duration-300 h-full relative overflow-hidden group"
           >
             <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-2xl group-hover:bg-[#5147f3]/20 transition-all duration-300"></div>
             <div className="flex flex-col items-center text-gray-400">
-              <div className="h-14 w-14 rounded-full bg-[#5147f3]/20 flex items-center justify-center group-hover:bg-[#5147f3]/30 transition-all duration-300 shadow-inner">
-                <UserPlus className="h-7 w-7 text-[#6c63ff] group-hover:scale-110 transition-all duration-300" />
+              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full bg-[#5147f3]/20 flex items-center justify-center group-hover:bg-[#5147f3]/30 transition-all duration-300 shadow-inner">
+                <UserPlus className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-[#6c63ff] group-hover:scale-110 transition-all duration-300" />
               </div>
-              <p className="mt-4 text-lg font-medium text-gray-300 group-hover:text-white transition-colors">
+              <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg font-medium text-gray-300 group-hover:text-white transition-colors">
                 Add Agent
               </p>
             </div>
