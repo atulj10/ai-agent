@@ -17,35 +17,39 @@ interface AgentCardType {
 
 const AgentCard = ({ agent, deleteAgent }: AgentCardType) => {
   return (
-    <Card className="bg-[#18181B]/80 min-h-28 backdrop-blur-sm border border-[#303040] flex items-center shadow-xl rounded-2xl hover:shadow-[0_0_20px_rgba(81,71,243,0.15)] p-4 sm:p-5 md:p-6 hover:scale-[1.02] sm:hover:scale-[1.03] md:hover:scale-[1.05] transition-all duration-300 cursor-pointer h-full relative overflow-hidden">
-      <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-2xl"></div>
+    <Card className="group bg-[#18181B]/80 min-h-32 backdrop-blur-sm border border-[#303040] flex items-center shadow-xl rounded-xl hover:shadow-[0_0_30px_rgba(81,71,243,0.25)] p-5 transition-all duration-300 cursor-pointer h-full relative overflow-hidden hover:border-[#5147f3]/70">
+      {/* Subtle glow effects */}
+      <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-[#5147f3]/10 blur-xl group-hover:bg-[#5147f3]/15 transition-all duration-500"></div>
+      <div className="absolute -left-6 -bottom-6 h-16 w-16 rounded-full bg-[#7f73ff]/10 blur-lg group-hover:bg-[#7f73ff]/15 transition-all duration-700"></div>
+
       <CardHeader className="flex flex-row items-center w-full justify-between p-0 space-y-0">
         <Link
           href={`/main/agents/${agent?._id}`}
-          className="flex items-center gap-3 sm:gap-4 w-full"
+          className="flex items-center gap-4 w-full"
         >
-          <div className="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full bg-gradient-to-br from-[#5147f3] to-[#7f73ff] flex items-center justify-center text-white font-bold text-base sm:text-lg shadow-md shadow-[#5147f3]/20">
+          <div className="relative h-12 w-12 rounded-full bg-gradient-to-br from-[#5147f3] to-[#7f73ff] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#5147f3]/30 group-hover:shadow-[#5147f3]/50 transition-shadow">
             {agent?.name.charAt(0).toUpperCase()}
+            <span className="absolute inset-0 rounded-full border border-white/10"></span>
           </div>
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base sm:text-lg font-semibold text-white truncate">
+          <div className="flex-1 min-w-0 space-y-1">
+            <CardTitle className="text-lg font-semibold text-white truncate group-hover:text-[#a5b4fc] transition-colors">
               {agent?.name}
             </CardTitle>
-            <p className="text-xs sm:text-sm text-gray-400 line-clamp-1 mt-1">
-              {agent?.description || "No description"}
+            <p className="text-sm text-gray-400 line-clamp-1 group-hover:text-gray-300 transition-colors">
+              {agent?.description || "No description provided"}
             </p>
           </div>
         </Link>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="p-1 sm:p-2 rounded-full hover:bg-[#282A36]/60 transition-colors">
-              <MoreVertical className="text-gray-400 cursor-pointer hover:text-white transition-colors w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="p-2 rounded-lg hover:bg-[#282A36]/60 transition-colors group-hover:bg-[#282A36]/80">
+              <MoreVertical className="text-gray-400 cursor-pointer hover:text-white transition-colors w-5 h-5" />
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-[#282A36] border border-gray-600 rounded-xl p-1 shadow-xl">
+          <DropdownMenuContent className="bg-[#282A36] border border-[#303040] rounded-lg p-1 shadow-xl backdrop-blur-sm">
             <DropdownMenuItem
-              className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer rounded-lg px-3 py-2 font-medium"
+              className="text-red-400 hover:bg-red-500/10 focus:bg-red-500/10 cursor-pointer rounded-md px-3 py-2 font-medium transition-colors"
               onClick={() => deleteAgent(agent?._id as string)}
             >
               <Trash className="h-4 w-4 mr-2" />
